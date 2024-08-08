@@ -1,0 +1,48 @@
+import numpy as np
+
+def compute_mean_energy(E_min, E_max, slope):
+    x_ratio = E_min / (E_max - E_min)
+    x_tilde = E_min
+    x_tilde *= np.power(x_ratio / (slope - 1.) * (1. - np.power(E_max / E_min, -slope + 1.)), -1. / slope)
+    return x_tilde
+
+def quadrature(a, b):
+    return np.sqrt(a * a + b * b)
+    
+def readfile(filename):
+    x_min, x_max, y, yStaLo, yStaUp, ySysLo, ySysUp = np.loadtxt(filename, usecols=(0,1,2,3,4,5,6), unpack=True)
+    return x_min, x_max, y, yStaLo, yStaUp, ySysLo, ySysUp
+
+def dump(data, filename):
+    print(filename)
+    f = open('output/' + filename, 'w')
+    E_mean, I_E, IStaLo, IStaUp, ISysLo, ISysUp = data
+    for i,j,k,l,m,n in zip(E_mean, I_E, IStaLo, IStaUp, ISysLo, ISysUp):
+        f.write(f'{i:6.4e} {j:6.4e} {k:6.4e} {l:6.4e} {m:6.4e} {n:6.4e}\n')
+    f.close()
+
+def transform_AMS02():
+    size = 73
+    R_min, R_max, I_R, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e+_rigidity.txt')
+    R_mean = compute_mean_energy(R_min, R_max, 3.0)
+    data = [R_mean[0:size], I_R[0:size], eStaLo[0:size], eStaUp[0:size], eSysLo[0:size], eSysUp[0:size]]
+    dump(data, 'AMS-02_e+_rigidity.txt')
+
+    R_min, R_max, I_R, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e-_rigidity.txt')
+    R_mean = compute_mean_energy(R_min, R_max, 3.0)
+    data = [R_mean[0:size], I_R[0:size], eStaLo[0:size], eStaUp[0:size], eSysLo[0:size], eSysUp[0:size]]
+    dump(data, 'AMS-02_e-_rigidity.txt')
+
+    R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
+    R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
+    R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
+    y = I_e[0:size] - I_p[0:size]
+    estaLo = quadrature(eStaLo_e[0:size], eStaLo_p[0:size])
+    estaUp = quadrature(eStaUp_e[0:size], eStaUp_p[0:size])
+    eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
+    eSysUp = eSysUp_e[0:size] + eSysUp_p[0:size]
+    data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_e-_minus_e+_rigidity.txt')
+
+if __name__== "__main__":
+    transform_AMS02()
