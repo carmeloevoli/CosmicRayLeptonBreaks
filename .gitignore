@@ -1,4 +1,4 @@
+model/data
 plots/data
 plots/timeseries/
-
-
+plots/*.pdf
