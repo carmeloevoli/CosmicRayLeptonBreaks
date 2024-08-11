@@ -39,10 +39,14 @@ def transform_AMS02():
     y = I_e[0:size] - I_p[0:size]
     estaLo = quadrature(eStaLo_e[0:size], eStaLo_p[0:size])
     estaUp = quadrature(eStaUp_e[0:size], eStaUp_p[0:size])
-    eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
-    eSysUp = eSysUp_e[0:size] + eSysUp_p[0:size]
+    eSysLo = eSysLo_e[0:size] # + eSysLo_p[0:size]
+    eSysUp = eSysUp_e[0:size] # + eSysUp_p[0:size]
     data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
     dump(data, 'AMS-02_e-_minus_e+_rigidity.txt')
+
+    y = I_e[0:size] - (I_p[0:size] + eSysUp_p[0:size])
+    data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_e-_minus_e+_statUp_rigidity.txt')
 
 if __name__== "__main__":
     transform_AMS02()
