@@ -48,5 +48,51 @@ def transform_AMS02():
     data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
     dump(data, 'AMS-02_e-_minus_e+_statUp_rigidity.txt')
 
+def transform_AMS02_leptons():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e-e+_rigidity.txt')
+    E_mean = compute_mean_energy(E_min, E_max, 3.0)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_e-e+_energy.txt')
+    
+def transform_DAMPE():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/DAMPE_e-e+_energy.txt')
+    E_mean = compute_mean_energy(E_min, E_max, 3.0)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'DAMPE_e-e+_energy.txt')
+
+def transform_CALET():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/CALET_2311.05916.txt')
+    E_mean = compute_mean_energy(E_min, E_max, 3.0)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'CALET_e-e+_energy.txt')
+
+def transform_FERMI():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/FERMI_e-e+_energy.txt')
+    E_mean = compute_mean_energy(E_min, E_max, 3.0)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'FERMI_e-e+_energy.txt')
+    
+def transform_HESS():
+    filename = 'lake/HESS_e+e-_totalEnergy.txt'
+    E_mean, I_E, eStaLo, eStaUp = np.loadtxt(filename, usecols=(0,1,2,3), unpack=True)
+    data = [E_mean, I_E, eStaLo, eStaUp, 0. * eStaLo, 0. * eStaUp]
+    dump(data, 'HESS_e-e+_energy.txt')
+    
+def transform_VERITAS():
+    filename = 'lake/VERITAS_e+e-_totalEnergy.txt'
+    E_min, E_max, I_E, eSta = np.loadtxt(filename, usecols=(0,1,2,3), unpack=True)
+    E_mean = 1e3 * compute_mean_energy(E_min, E_max, 3.0) # TeV -> GeV
+    I_E *= 1e4 #
+    eSta *= 1e4 #
+    data = [E_mean, I_E, eSta, eSta, 0. * eSta, 0. * eSta]
+    dump(data, 'VERITAS_e-e+_energy.txt')
+
 if __name__== "__main__":
     transform_AMS02()
+    transform_AMS02_leptons()
+    transform_CALET()
+    transform_DAMPE()
+    transform_FERMI()
+    transform_HESS()
+    transform_VERITAS()
+
