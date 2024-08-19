@@ -1,11 +1,12 @@
 import scipy.stats
 
-df = 3.
+def compute_chi2(dof, sigmas):
+    ci = scipy.stats.chi2.cdf(sigmas * sigmas, 1)
+    chi_squared = scipy.stats.chi2.ppf(ci, dof)
     
-s = 3.
+    print (f'{dof} {sigmas} {ci} {chi_squared}')
 
-ci = scipy.stats.chi2.cdf(s * s, 1)
-    
-chi_squared = scipy.stats.chi2.ppf(ci, df)
-    
-print (df, s, ci, chi_squared)
+if __name__== "__main__":
+    compute_chi2(2., 4.7) # test DAMPE paper
+
+    compute_chi2(1., 3.) # 3-sigma limit for 1 dof
