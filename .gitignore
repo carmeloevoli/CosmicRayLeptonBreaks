@@ -4,3 +4,5 @@ model/data
 plots/data
 plots/timeseries/
 plots/*.pdf
+plots/figures
+scratch/

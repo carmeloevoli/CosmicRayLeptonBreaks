@@ -8,5 +8,3 @@ def compute_chi2(dof, sigmas):
 
 if __name__== "__main__":
     compute_chi2(2., 4.7) # test DAMPE paper
-
-    compute_chi2(1., 3.) # 3-sigma limit for 1 dof

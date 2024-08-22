@@ -19,13 +19,13 @@ def get_data(filename):
     filename = 'timeseries/' + filename
     E_lo, E_up, y, err_stat_lo, err_stat_up, err_sys_lo, err_sys_up = np.loadtxt(filename,usecols=(2,3,4,5,6,7,8),unpack=True)
     ind = np.argsort(E_lo)
-    return E_lo[ind], E_up[ind], y[ind]
+    return E_lo[ind], E_up[ind], y[ind], 0.5 * (err_stat_up[ind] + err_stat_lo[ind])
     
-def build_timeseries(size = 3000):
-    E_lo, E_hi, y = get_data('data_exp1.dat')
+def build_timeseries(size = 3300):
+    E_lo, E_hi, y, erry = get_data('data_exp1.dat')
     y_series = np.zeros((10, size))
     for i in range(1, size + 1):
-        E_lo, E_hi, y = get_data('data_exp' + str(i) + '.dat')
+        E_lo, E_hi, y, erry = get_data('data_exp' + str(i) + '.dat')
         assert(len(y) == 10)
         y_series[:,i - 1] = y
     return E_lo, E_hi, y_series
@@ -40,7 +40,7 @@ def plot_timeaverage():
         ax.set_ylabel(r'median absolute deviation [\%]')
         ax.set_ylim([-32, 32])
 
-    fig = plt.figure(figsize=(11.0, 8.5))
+    fig = plt.figure(figsize=(11.0, 8.0))
     ax = fig.add_subplot(111)
     set_axes(ax)
     
@@ -53,6 +53,7 @@ def plot_timeaverage():
     for i in range(10):
         y_median = np.append(y_median, np.median(y_series[i,:]))
         y_mad = np.append(y_mad, stats.median_abs_deviation(y_series[i,:]))
+        
     ax.errorbar(E[1:10], 0. * E[1:10], yerr=y_mad[1:10] / y_median[1:10] * 100., fmt='o', markeredgecolor='tab:red', color='tab:red',
                 capsize=4.0, markersize=7, elinewidth=2.0, capthick=2.0, label='2011/05/20 - 2021/11/02', zorder=10)
 

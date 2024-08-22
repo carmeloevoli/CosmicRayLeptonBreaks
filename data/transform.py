@@ -23,30 +23,47 @@ def dump(data, filename):
 
 def transform_AMS02():
     size = 73
-    R_min, R_max, I_R, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e+_rigidity.txt')
-    R_mean = compute_mean_energy(R_min, R_max, 3.0)
-    data = [R_mean[0:size], I_R[0:size], eStaLo[0:size], eStaUp[0:size], eSysLo[0:size], eSysUp[0:size]]
-    dump(data, 'AMS-02_e+_rigidity.txt')
+    
+    def _positrons():
+        R_min, R_max, I_R, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e+_rigidity.txt')
+        R_mean = compute_mean_energy(R_min, R_max, 3.0)
+        data = [R_mean[0:size], I_R[0:size], eStaLo[0:size], eStaUp[0:size], eSysLo[0:size], eSysUp[0:size]]
+        dump(data, 'AMS-02_e+_energy.txt')
 
-    R_min, R_max, I_R, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e-_rigidity.txt')
-    R_mean = compute_mean_energy(R_min, R_max, 3.0)
-    data = [R_mean[0:size], I_R[0:size], eStaLo[0:size], eStaUp[0:size], eSysLo[0:size], eSysUp[0:size]]
-    dump(data, 'AMS-02_e-_rigidity.txt')
+    def _electrons():
+        R_min, R_max, I_R, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e-_rigidity.txt')
+        R_mean = compute_mean_energy(R_min, R_max, 3.0)
+        data = [R_mean[0:size], I_R[0:size], eStaLo[0:size], eStaUp[0:size], eSysLo[0:size], eSysUp[0:size]]
+        dump(data, 'AMS-02_e-_energy.txt')
 
-    R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
-    R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
-    R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
-    y = I_e[0:size] - I_p[0:size]
-    estaLo = quadrature(eStaLo_e[0:size], eStaLo_p[0:size])
-    estaUp = quadrature(eStaUp_e[0:size], eStaUp_p[0:size])
-    eSysLo = eSysLo_e[0:size] # + eSysLo_p[0:size]
-    eSysUp = eSysUp_e[0:size] # + eSysUp_p[0:size]
-    data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
-    dump(data, 'AMS-02_e-_minus_e+_rigidity.txt')
+    def _difference():
+        R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
+        R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
+        R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
+        y = I_e[0:size] - I_p[0:size]
+        eStaLo = eStaLo_e[0:size] + eStaLo_p[0:size]
+        eStaUp = eStaUp_e[0:size] + eStaUp_p[0:size]
+        eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
+        eSysUp = eSysUp_e[0:size] + eSysUp_p[0:size]
+        data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
+        dump(data, 'AMS-02_e-_minus_e+_energy.txt')
 
-    y = I_e[0:size] - (I_p[0:size] + eSysUp_p[0:size])
-    data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
-    dump(data, 'AMS-02_e-_minus_e+_statUp_rigidity.txt')
+    def _difference_up():
+        R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
+        R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
+        R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
+        y = I_e[0:size] - (I_p[0:size] + eSysUp_p[0:size])
+        eStaLo = eStaLo_e[0:size] + eStaLo_p[0:size]
+        eStaUp = eStaUp_e[0:size] + eStaUp_p[0:size]
+        eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
+        eSysUp = eSysUp_e[0:size] + eSysUp_p[0:size]
+        data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
+        dump(data, 'AMS-02_e-_minus_e+_statUp_energy.txt')
+
+    _positrons()
+    _electrons()
+    _difference()
+    _difference_up()
 
 def transform_AMS02_leptons():
     E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e-e+_rigidity.txt')
@@ -54,6 +71,42 @@ def transform_AMS02_leptons():
     data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
     dump(data, 'AMS-02_e-e+_energy.txt')
     
+def transform_AMS02_protons():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_H_rigidity.txt')
+    E_mean = compute_mean_energy(E_min, E_max, 2.7)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_H_energy.txt')
+
+def transform_AMS02_antiprotons():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_ap_rigidity.txt')
+    E_mean = compute_mean_energy(E_min, E_max, 3.0)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_ap_energy.txt')
+
+def transform_AMS02_H_over_electrons():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_H_over_e-_rigidity.txt')
+    E_mean = np.sqrt(E_min * E_max)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_H_over_e-_energy.txt')
+
+def transform_AMS02_pf():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_pf_energy.txt')
+    E_mean = np.sqrt(E_min * E_max)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'AMS-02_pf_energy.txt')
+
+def transform_PAMELA_pf():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/PAMELA_pf_energy.txt')
+    E_mean = np.sqrt(E_min * E_max)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'PAMELA_pf_energy.txt')
+
+def transform_FERMI_pf():
+    E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/FERMI_pf_energy.txt')
+    E_mean = np.sqrt(E_min * E_max)
+    data = [E_mean, I_E, eStaLo, eStaUp, eSysLo, eSysUp]
+    dump(data, 'FERMI_pf_energy.txt')
+
 def transform_DAMPE():
     E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/DAMPE_e-e+_energy.txt')
     E_mean = compute_mean_energy(E_min, E_max, 3.0)
@@ -90,9 +143,14 @@ def transform_VERITAS():
 if __name__== "__main__":
     transform_AMS02()
     transform_AMS02_leptons()
+    transform_AMS02_protons()
+    transform_AMS02_antiprotons()
+    transform_AMS02_H_over_electrons()
+    transform_AMS02_pf()
     transform_CALET()
     transform_DAMPE()
     transform_FERMI()
+    transform_FERMI_pf()
     transform_HESS()
     transform_VERITAS()
-
+    transform_PAMELA_pf()

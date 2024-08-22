@@ -18,16 +18,17 @@ def chi2_single(x, mu, sigma):
     return np.power((x - mu) / sigma, 2.)
 
 def load_data(minEnergy, maxEnergy = 1e20):
-    filename = 'data/AMS-02_e-_minus_e+_rigidity.txt'
+    filename = 'data/AMS-02_e-_minus_e+_statUp_rigidity.txt'
     E, y, err_stat_lo, err_stat_up, err_sys_lo, err_sys_up = np.loadtxt(filename,usecols=(0,1,2,3,4,5),unpack=True)
     items = [i for i in range(len(E)) if (E[i] > minEnergy and E[i] < maxEnergy)]
-    err_stat_lo = np.sqrt(err_stat_lo * err_stat_lo + err_sys_lo * err_sys_lo)
-    err_stat_up = np.sqrt(err_stat_up * err_stat_up + err_sys_up * err_sys_up)
+    #err_stat_lo = np.sqrt(err_stat_lo * err_stat_lo + err_sys_lo * err_sys_lo)
+    #err_stat_up = np.sqrt(err_stat_up * err_stat_up + err_sys_up * err_sys_up)
     return E[items], y[items], err_stat_lo[items], err_stat_up[items]
 
 def fit_bpl(params):
+    xd, yd, errd_lo, errd_up = load_data(20., 1000.)
+
     def chi2_function(I0, E0, alpha, Eb, dalpha, s):
-        xd, yd, errd_lo, errd_up = load_data(20., 1000.)
         chi2 = 0.
         for x_i, y_i, err_lo_i, err_up_i in zip(xd, yd, errd_lo, errd_up):
             m = bpl(x_i, [I0, E0, alpha, Eb, dalpha, s])
@@ -55,13 +56,16 @@ def fit_bpl(params):
 
     #print(m)
 
-    print(m.fval, 38. - m.nfit - 1)
+    print('Broken power-law:')
+    print(f'params : {m.values[0]:5.3f} {m.values[1]:5.0f} {m.values[2]:5.3f} {m.values[3]:5.3f} {m.values[4]:5.3f} {m.values[5]:5.3f}')
+    print(f'chi2 / dof : {m.fval:5.2f} / {len(xd) - m.nfit - 1}')
 
     return m.values, m.errors, m.fval
 
 def fit_spl(params):
+    xd, yd, errd_lo, errd_up = load_data(20., 1000.)
+
     def chi2_function(I0, E0, alpha):
-        xd, yd, errd_lo, errd_up = load_data(20., 1000.)
         chi2 = 0.
         for x_i, y_i, err_lo_i, err_up_i in zip(xd, yd, errd_lo, errd_up):
             m = spl(x_i, [I0, E0, alpha])
@@ -85,8 +89,9 @@ def fit_spl(params):
     m.hesse()
 
     #print(m)
-
-    print(m.fval, 38. - m.nfit - 1)
+    print('Single power-law:')
+    print(f'params : {m.values[0]:5.3f} {m.values[1]:5.0f} {m.values[2]:5.3f}')
+    print(f'chi2 / dof : {m.fval:5.0f} / {len(xd) - m.nfit - 1}')
 
     return m.values, m.errors, m.fval
     

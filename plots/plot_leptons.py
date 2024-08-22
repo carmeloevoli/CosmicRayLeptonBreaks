@@ -35,6 +35,15 @@ def plot_data(ax, filename, slope, norm, fmt, color, label, zorder=3):
 #    ax.errorbar(E, y, yerr=[y_err_lo, y_err_up], fmt=fmt, markeredgecolor=color, color=color,
 #                capsize=3.5, markersize=6, elinewidth=1.8, capthick=1.8, zorder=zorder)
 
+    
+def plot_nosys_data(ax, filename, slope, norm, fmt, color, label, zorder=3):
+    E, y, err_stat_lo, err_stat_up, err_sys_lo, err_sys_up = np.loadtxt(filename,usecols=(0,1,2,3,4,5),unpack=True)
+    y = norm * np.power(E, slope) * y
+    y_err_lo = norm * np.power(E, slope) * err_stat_lo
+    y_err_up = norm * np.power(E, slope) * err_stat_up
+    ax.errorbar(E, y, yerr=[y_err_lo, y_err_up], fmt=fmt, markeredgecolor=color, color=color, label=label,
+                capsize=3.5, markersize=6, elinewidth=1.8, capthick=1.8, zorder=zorder)
+
 def plot_direct_leptons():
     def set_axes(ax):
         ax.set_xlabel('E [GeV]')
@@ -44,44 +53,47 @@ def plot_direct_leptons():
         ax.set_yscale('log')
         ax.set_ylim([8, 200])
 
-    fig = plt.figure(figsize=(11.0, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.0))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
-    plot_data(ax, 'data/DAMPE_e-e+_energy.txt', 3.0, 1., 'o', 'r', r'DAMPE', 3)
-    plot_data(ax, 'data/CALET_e-e+_energy.txt', 3.0, 1., 'o', 'g', r'CALET', 3)
-    plot_data(ax, 'data/AMS-02_e-e+_energy.txt', 3.0, 1., 'o', 'tab:orange', r'AMS-02', 2)
-    plot_data(ax, 'data/FERMI_e-e+_energy.txt', 3.0, 1., 'o', 'b', r'FERMI', 2)
+    plot_data(ax, 'data/DAMPE_e-e+_energy.txt', 3.0, 1., 'o', 'r', r'DAMPE', 4)
+    plot_data(ax, 'data/CALET_e-e+_energy.txt', 3.0, 1., 'o', 'g', r'CALET', 4)
+    plot_data(ax, 'data/AMS-02_e-e+_energy.txt', 3.0, 1., 'o', 'tab:orange', r'AMS-02', 3)
+    plot_data(ax, 'data/FERMI_e-e+_energy.txt', 3.0, 1., 'o', 'b', r'FERMI', 3)
    
-    ax.legend(fontsize=25, loc='lower left')
-    savefig(plt, 'direct-leptons.pdf')
+    plot_nosys_data(ax, 'data/VERITAS_e-e+_energy.txt', 3.0, 1., 's', 'tab:gray', r'VERITAS', 1)
+    plot_nosys_data(ax, 'data/HESS_e-e+_energy.txt', 3.0, 1., 's', 'k', r'HESS', 1)
 
-def plot_DAMPE_leptons():
-    def set_axes(ax):
-        ax.set_xlabel('E [GeV]')
-        ax.set_xscale('log')
-        ax.set_xlim([8e1, 8e3])
-        ax.set_ylabel(r'E$^{3}$ I [GeV$^{2}$ m$^{-2}$ s$^{-1}$ sr$^{-1}$]')
-        ax.set_yscale('log')
-        ax.set_ylim([8, 200])
+    ax.legend(fontsize=20, loc='lower left')
+    savefig(plt, 'TeVPA24-direct-leptons.pdf')
 
-    fig = plt.figure(figsize=(11.0, 8.0))
-    ax = fig.add_subplot(111)
-    set_axes(ax)
+# def plot_DAMPE_leptons():
+#     def set_axes(ax):
+#         ax.set_xlabel('E [GeV]')
+#         ax.set_xscale('log')
+#         ax.set_xlim([8e1, 8e3])
+#         ax.set_ylabel(r'E$^{3}$ I [GeV$^{2}$ m$^{-2}$ s$^{-1}$ sr$^{-1}$]')
+#         ax.set_yscale('log')
+#         ax.set_ylim([8, 200])
 
-    plot_data(ax, 'data/DAMPE_e-e+_energy.txt', 3.0, 1., 'o', 'r', r'DAMPE', 3)
+#     fig = plt.figure(figsize=(11.0, 8.0))
+#     ax = fig.add_subplot(111)
+#     set_axes(ax)
 
-    E = np.logspace(1, 4, 1000)
-    E3 = np.power(E, 3.)
+#     plot_data(ax, 'data/DAMPE_e-e+_energy.txt', 3.0, 1., 'o', 'r', r'DAMPE', 3)
 
-    I0, E0, alpha, Eb, dalpha, s = 0.3231, 80.0, 3.089, 1.07e3, 1.2, 5
-    ax.plot(E, E3 * bpl(E, [I0, E0, alpha, Eb, dalpha, s]), zorder=9, color='r', label='$\chi^2$/dof = 29 / 32')
+#     E = np.logspace(1, 4, 1000)
+#     E3 = np.power(E, 3.)
 
-#    ax.vlines(1e3, 0, 1000, ls=':')
-#    ax.fill_between([10, 20], 10, 230, color='tab:gray', alpha=0.2)
+#     I0, E0, alpha, Eb, dalpha, s = 0.3231, 80.0, 3.089, 1.07e3, 1.2, 5
+#     ax.plot(E, E3 * bpl(E, [I0, E0, alpha, Eb, dalpha, s]), zorder=9, color='r', label='$\chi^2$/dof = 29 / 32')
 
-    ax.legend(fontsize=25, loc='lower left')
-    savefig(plt, 'DAMPE-leptons.pdf')
+# #    ax.vlines(1e3, 0, 1000, ls=':')
+# #    ax.fill_between([10, 20], 10, 230, color='tab:gray', alpha=0.2)
+
+#     ax.legend(fontsize=25, loc='lower left')
+#     savefig(plt, 'DAMPE-leptons.pdf')
 
 def plot_indirect_leptons():
     def set_axes(ax):
@@ -101,9 +113,9 @@ def plot_indirect_leptons():
     plot_data(ax, 'data/HESS_e-e+_energy.txt', 3.0, 1., 'o', 'g', r'HESS', 3)
 
     ax.legend(fontsize=25, loc='lower left')
-    savefig(plt, 'indirect-leptons.pdf')
+    savefig(plt, 'TeVPA24-indirect-leptons.pdf')
     
 if __name__== "__main__":
     plot_direct_leptons()
-    plot_DAMPE_leptons()
-    plot_indirect_leptons()
+    #plot_DAMPE_leptons()
+    #plot_indirect_leptons()
