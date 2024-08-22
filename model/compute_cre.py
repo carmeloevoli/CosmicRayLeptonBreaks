@@ -93,10 +93,38 @@ def nsources(E: float, B: float) -> float:
     x = min(1., l2 / R_Galaxy**2.0)
     return t_l * rate_sources * x
 
+def lambda_prop(E: float, Eprime: float, delta: float) -> float:
+    assert(Eprime >= E)
+    assert(delta < 1.)
+    l2 = np.power(E / E_0, delta - 1.) - np.power(Eprime / E_0, delta - 1.)
+    return np.sqrt(l2)
+
+def qconst(E: float) -> float:
+    return 1.
+
+def qcutoff(E: float) -> float:
+    return np.exp(- (E / 2e4)**2.0)
+
+def qbreak(E: float) -> float:
+    E_break = 0.90e3
+    alpha = 2.46
+    dalpha = 0.75
+    s = 30.
+    I0, E0 = 1., 1e2
+    y = (I0 / 1e3) * np.power(E / E0, -alpha)
+    y /= np.power(1. + np.power(E / E_break, s), dalpha / s)
+    return y
+
+def compute_cre(E: float) -> float:
+    import scipy.integrate as integrate
+    def integrand(lnx: float) -> float:
+        x = np.exp(lnx)
+        return x * qbreak(x) / lambda_prop(E, x, delta = 0.34)
+    ne = integrate.quad(lambda lnx: integrand(lnx), np.log(E), np.log(E) + 20.)
+    return ne / np.power(E / E_0, 2.)
+
 def print_timescale(filename: str):
     energies = np.logspace(1, 5, 2000)
-
-    print(f'dump on {filename}')
     with open(filename, 'w') as f:
         f.write('# E [Myr] - tau_esc(5kpc) - tau_esc(2kpc) - CMB - IR - opt - UV - ISRF - B1muG - B2muG [Myr]\n')
         for E in energies:
@@ -111,13 +139,12 @@ def print_timescale(filename: str):
             t_B3 = tau_sync(E, 3e-6)
             f.write(f'{E:5.3e} {t_d5:5.3e} {t_d2:5.3e} {t_CMB:5.3e} {t_IR:5.3e} {t_opt:5.3e} {t_UV:5.3e} {t_ISRF:5.3e} {t_B1:5.3e} {t_B3:5.3e}\n')  
     f.close()
+    print(f'dump on {filename}')
 
 def print_horizon(filename: str):
     energies = np.logspace(1, 5, 2000)
-
-    print(f'dump on {filename}')
     with open(filename, 'w') as f:
-        f.write('# E [Myr] - l2(kpc2)\n')
+        f.write('# E [GeV] - l2(kpc2)\n')
         for E in energies:
             l2_1 = lambda_2(E, 1e-6)
             l2_3 = lambda_2(E, 3e-6)
@@ -125,34 +152,32 @@ def print_horizon(filename: str):
             N_3 = nsources(E, 3e-6)
             f.write(f'{E:5.3e} {l2_1:5.3e} {l2_3:5.3e} {N_1:5.3e} {N_3:5.3e}\n')
     f.close()
+    print(f'dump on {filename}')
 
-def pwn_paradigm():
-    cLightCGS = 2.99792458e10 # cm / s 
-    yearCGS = 3.1e7 # s
-    kpcCGS = 3.11e21 # s
+def print_sourceterms(filename: str):
+    energies = np.logspace(1, 4, 300)
+    with open(filename, 'w') as f:
+        f.write('# E [GeV] - Q\n')
+        for E in energies:
+            q_1 = qconst(E)
+            q_2 = qcutoff(E)
+            q_3 = qbreak(E)
+            f.write(f'{E:5.3e} {q_1:5.3e} {q_2:5.3e} {q_3:5.3e}\n')
+    f.close()
+    print(f'dump on {filename}')
 
-    E2I = 0.2 / 1e4 # GeV cm-2 s-1 sr-1
-    epsilon_pos = 4. * math.pi / cLightCGS * E2I # GeV / cm3
-    print (f'energy density positrons : {epsilon_pos * 1e9:4.0e} eV/cm3')
-
-    epsilon_pos /= GeV2erg # erg / cm3
-    print (f'energy density positrons : {epsilon_pos:4.0e} erg/cm3')
-
-    tau_loss = 4. * 1e6 * yearCGS
-    R_G = 15. * kpcCGS
-    l_G = 5. * kpcCGS
-    V_G = 2. * math.pi * R_G**2.0 * l_G
-
-    print(f'V_G : {np.power(V_G, 1. / 3.) / kpcCGS:4.0f} kpc3')
-
-    print(f'L pos : {epsilon_pos * V_G / tau_loss:4.0e} erg/s')
-
-    E_PWN = 5e47 # erg
-    R_PWN = 1. / 50. / yearCGS
-
-    print(f'L PWN : {E_PWN * R_PWN:4.0e} erg/s')
+def print_cre(filename: str):
+    energies = np.logspace(1, 4, 1000)
+    with open(filename, 'w') as f:
+        f.write('# E [GeV] - Q\n')
+        for E in energies:
+            n_3 = compute_cre(E)
+            f.write(f'{E:5.3e} 0 0 {n_3[0]:5.3e}\n')
+    f.close()
+    print(f'dump on {filename}')
 
 if __name__== "__main__":
     #print_timescale('TeVPA24_timescales.txt')
     #print_horizon('TeVPA24_horizons.txt')
-    pwn_paradigm()
+    #print_sourceterms('TeVPA24_sources.txt')
+    print_cre('TeVPA24_cre.txt')

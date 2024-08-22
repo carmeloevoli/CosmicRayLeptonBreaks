@@ -126,11 +126,17 @@ def transform_FERMI():
     dump(data, 'FERMI_e-e+_energy.txt')
     
 def transform_HESS():
-    filename = 'lake/HESS_e+e-_totalEnergy.txt'
-    E_mean, I_E, eStaLo, eStaUp = np.loadtxt(filename, usecols=(0,1,2,3), unpack=True)
+    filename = 'lake/HESS_e-e+_energy.txt'
+    E_mean, I_E, eStaLo, eStaUp = np.loadtxt(filename, usecols=(0,2,3,4), unpack=True)
     data = [E_mean, I_E, eStaLo, eStaUp, 0. * eStaLo, 0. * eStaUp]
     dump(data, 'HESS_e-e+_energy.txt')
     
+def transform_HESS_LE():
+    filename = 'lake/HESS-LE_e-e+_energy.txt'
+    E_mean, I_E, eStaLo, eStaUp = np.loadtxt(filename, usecols=(0,2,3,4), unpack=True)
+    data = [E_mean, I_E, eStaLo, eStaUp, 0. * eStaLo, 0. * eStaUp]
+    dump(data, 'HESS-LE_e-e+_energy.txt')
+
 def transform_VERITAS():
     filename = 'lake/VERITAS_e+e-_totalEnergy.txt'
     E_min, E_max, I_E, eSta = np.loadtxt(filename, usecols=(0,1,2,3), unpack=True)
@@ -152,5 +158,6 @@ if __name__== "__main__":
     transform_FERMI()
     transform_FERMI_pf()
     transform_HESS()
+    transform_HESS_LE()
     transform_VERITAS()
     transform_PAMELA_pf()

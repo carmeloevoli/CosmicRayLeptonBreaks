@@ -44,7 +44,10 @@ if __name__== '__main__':
     dump_datafile('e-+e+', 'ETOT', 'DAMPE', 'DAMPE (2015/12-2017/06)', 'DAMPE_e-e+_energy.txt')
     dump_datafile('e-+e+', 'ETOT', 'CALET', 'CALET (2015/10-2017/06)', 'CALET_e-e+_energy.txt')
     dump_datafile('e-+e+', 'ETOT', 'FERMI', 'Fermi-LAT-HE (2008/08-2015/06)', 'FERMI_e-e+_energy.txt')
+    dump_datafile('e-+e+', 'EK', 'H.E.S.S.', 'H.E.S.S. (2004/10-2007/08)', 'HESS_e-e+_energy.txt')
+    dump_datafile('e-+e+', 'EK', 'H.E.S.S.', 'H.E.S.S.-LE (2004/10-2005/12)', 'HESS-LE_e-e+_energy.txt')
 
     dump_datafile('e+/e-+e+', 'EK', 'AMS02', 'AMS02 (2011/05-2017/11)', 'AMS-02_pf_energy.txt')
     dump_datafile('e+/e-+e+', 'EK', 'PAMELA', 'PAMELA (2006/07-2009/12)', 'PAMELA_pf_energy.txt')
     dump_datafile('e+/e-+e+', 'EK', 'FERMI', 'Fermi-LAT  (2008/06-2011/04)', 'FERMI_pf_energy.txt')
+

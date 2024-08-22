@@ -8,6 +8,13 @@ def savefig(plt, plotname):
     print (plotname)
     plt.savefig(plotname)
 
+def bpl(E, params):
+    I0, E0, alpha, logEb, dalpha, s = params
+    Eb = np.power(10., logEb)
+    y = (I0 / 1e3) * np.power(E / E0, -alpha)
+    y /= np.power(1. + np.power(E / Eb, s), dalpha / s)
+    return y
+
 def plot_timescales():
     def set_axes(ax):
         ax.set_xlabel('E [GeV]')
@@ -101,7 +108,43 @@ def plot_nsources():
     ax.legend(fontsize=19, loc='lower left')
     savefig(plt, 'TeVPA24-nsources.pdf')
 
+def plot_sourceterm():
+    def set_axes(ax):
+        ax.set_xlabel('E [GeV]')
+        ax.set_xscale('log')
+        ax.set_xlim([1e1, 1e4])
+        ax.set_yscale('log')
+        ax.set_ylabel(r'q(E)')
+        #ax.set_ylim([0.1, 2])
+
+    fig = plt.figure(figsize=(10.5, 8.0))
+    ax = fig.add_subplot(111)
+    set_axes(ax) 
+
+    params, errors = np.loadtxt('../model/CALET_bpl_fit.txt', usecols=(0,1), unpack=True)
+
+    E = np.logspace(1, 4, 1000)
+    y = np.power(E, 3.1) * bpl(E, params)
+
+    ax.plot(E, y / max(y), zorder=9, color='tab:blue', label='CALET fit')
+
+    # filename = '../model/TeVPA24_sources.txt'
+    # E, Q_1, Q_2, Q_3 = np.loadtxt(filename, usecols=(0,1,2,3), unpack=True)
+
+    # #ax.plot(E, Q_3, color='tab:gray')
+
+    filename = '../model/TeVPA24_cre.txt'
+    E, n_1, n_2, n_3 = np.loadtxt(filename, usecols=(0,1,2,3), unpack=True)
+
+    y = np.power(E, 3.1) * n_3
+    
+    ax.plot(E, y / max(y), color='tab:red')
+
+    ax.legend(fontsize=19, loc='lower left')
+    savefig(plt, 'TeVPA24-sourceterms.pdf')
+
 if __name__== "__main__":
     #plot_timescales()
-    plot_horizon()
-    plot_nsources()
+    #plot_horizon()
+    #plot_nsources()
+    plot_sourceterm()
