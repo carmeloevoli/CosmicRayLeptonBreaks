@@ -29,7 +29,7 @@ rate_sources = 1. / 50. * 1e6 # Myr-1
 # ISRF
 
 CMB = [2.7, 0.260e-9 * kpc2cm**3.0] # K, GeV / kpc3
-IR = [33.07, 25.4e-11* kpc2cm**3.0] # K, GeV / kpc3
+IR = [33.07, 25.4e-11 * kpc2cm**3.0] # K, GeV / kpc3
 opt = [313.32,  5.47e-11 * kpc2cm**3.0] # K, GeV / kpc3
 UVI = [313.32,  5.47e-11 * kpc2cm**3.0] # K, GeV / kpc3
 UVII = [6150.4, 22.9e-11 * kpc2cm**3.0] # K, GeV / kpc3
@@ -177,7 +177,7 @@ def print_cre(filename: str):
     print(f'dump on {filename}')
 
 if __name__== "__main__":
-    #print_timescale('TeVPA24_timescales.txt')
-    #print_horizon('TeVPA24_horizons.txt')
-    #print_sourceterms('TeVPA24_sources.txt')
+    print_timescale('TeVPA24_timescales.txt')
+    print_horizon('TeVPA24_horizons.txt')
+    print_sourceterms('TeVPA24_sources.txt')
     print_cre('TeVPA24_cre.txt')

@@ -81,7 +81,7 @@ def plot_electrons_minus_positrons():
     I0, E0, alpha, Eb, dalpha, s = 22.022, 20, 3.321, 37.131, -0.075, 11.842
     ax.plot(E, E3 * bpl(E, [I0, E0, alpha, Eb, dalpha, s]), zorder=9, color='r', label='$\chi^2$/dof = 15 / 32')
 
-    plot_data(ax, 'data/AMS-02_e-_minus_e+_rigidity.txt', 3.3, 1., 'o', 'tab:blue', r'e$^-$ - e$^+$', zorder=3)
+    plot_data(ax, 'data/AMS-02_e-_minus_e+_energy.txt', 3.3, 1., 'o', 'tab:blue', r'e$^-$ - e$^+$', zorder=3)
     ax.text(30., 445., r'$e^-$ - $e^+$', color='tab:blue', fontsize=23)
 
     ax.legend(fontsize=22, loc='best')
@@ -111,7 +111,7 @@ def plot_electrons_minus_positrons_up():
     I0, E0, alpha, Eb, dalpha, s = 22.001, 20, 3.321, 36.738, -0.072, 13.691
     ax.plot(E, E3 * bpl(E, [I0, E0, alpha, Eb, dalpha, s]), zorder=9, color='r', label='$\chi^2$/dof = 15 / 32')
 
-    plot_data(ax, 'data/AMS-02_e-_minus_e+_statUp_rigidity.txt', 3.3, 1., 'o', 'tab:purple', r'e$^-$ - e$^+$', zorder=3)
+    plot_data(ax, 'data/AMS-02_e-_minus_e+_statUp_energy.txt', 3.3, 1., 'o', 'tab:purple', r'e$^-$ - e$^+$', zorder=3)
     ax.text(23., 448., r'$e^-$ - ($e^+$ + $\sigma_+^{\rm sys}$)', color='tab:purple', fontsize=23)
 
     ax.legend(fontsize=22, loc='best')
@@ -151,7 +151,7 @@ def plot_sigmas():
     savefig(plt, 'AMS02-sigmas.pdf')
 
 if __name__== "__main__":
-    plot_electrons_and_positrons()
+    #plot_electrons_and_positrons()
     plot_electrons_minus_positrons()
     plot_electrons_minus_positrons_up()
-    plot_sigmas()
+    #plot_sigmas()
