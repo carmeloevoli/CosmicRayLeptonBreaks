@@ -28,7 +28,7 @@ def plot_protons():
         ax.set_yscale('log')
         ax.set_ylim([0.1, 200])
 
-    fig = plt.figure(figsize=(10.5, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
@@ -42,7 +42,7 @@ def plot_protons():
     plot_data(ax, 'data/AMS-02_ap_energy.txt', 2.7, 1., 'o', 'tab:gray', r'e$^+$', 2)
     ax.text(0.55e3, 0.95, r'$\bar p$', color='tab:gray', fontsize=29)
 
-    E, I = np.loadtxt('FERMI_gammas_inner.txt', usecols=(0,1), unpack=True)
+    E, I = np.loadtxt('../data/lake/FERMI_gammas_inner.txt', usecols=(0,1), unpack=True)
     ax.plot(E, np.power(E, 0.7) * I, color='tab:brown')
     ax.text(30, 0.35, r'$\gamma$ (inner Galaxy)', color='tab:brown', fontsize=22)
 
@@ -63,7 +63,7 @@ def plot_electrons_over_protons():
         #ax.set_yscale('log')
         ax.set_ylim([0.5, 9])
 
-    fig = plt.figure(figsize=(10.5, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
@@ -76,9 +76,10 @@ def plot_electrons_over_protons():
     ax.fill_between([10., 50.], 0, 10, color='tab:gray', alpha=0.2)
     ax.fill_between([500., 1e4], 0, 10, color='tab:gray', alpha=0.2)
     ax.text(60., 4.5, r'$\alpha = 0.36$')
+    ax.text(15., 7.0, r'AMS-02', color='tab:gray')
     ax.legend(fontsize=25, loc='best')
     savefig(plt, 'TeVPA24-electrons-over-protons.pdf')
 
 if __name__== "__main__":
-    #plot_protons()
+    plot_protons()
     plot_electrons_over_protons()

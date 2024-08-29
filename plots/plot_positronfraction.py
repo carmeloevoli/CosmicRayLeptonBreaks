@@ -7,18 +7,7 @@ import numpy as np
 def savefig(plt, plotname):
     print (plotname)
     plt.savefig(plotname)
-    
-# def bpl(E, params):
-#     I0, E0, alpha, Eb, dalpha, s = params
-#     y = (I0 / 1e3) * np.power(E / E0, -alpha)
-#     y /= np.power(1. + np.power(E / Eb, s), dalpha / s)
-#     return y
-    
-# def spl(E, params):
-#     I0, E0, alpha = params
-#     y = (I0 / 1e3) * np.power(E / E0, -alpha)
-#     return y
-    
+        
 def plot_data(ax, filename, slope, norm, fmt, color, label, zorder=3):
     E, y, err_stat_lo, err_stat_up, err_sys_lo, err_sys_up = np.loadtxt(filename,usecols=(0,1,2,3,4,5),unpack=True)
     y = norm * np.power(E, slope) * y
@@ -81,4 +70,4 @@ def plot_E2positrons():
 
 if __name__== "__main__":
     plot_positronfraction()
-    plot_E2positrons()
+    #plot_E2positrons()

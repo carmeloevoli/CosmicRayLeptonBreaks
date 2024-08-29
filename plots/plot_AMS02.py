@@ -40,7 +40,7 @@ def plot_electrons_and_positrons():
         ax.set_ylabel(r'E$^{3}$ I [GeV$^{2}$ m$^{-2}$ s$^{-1}$ sr$^{-1}$]')
         ax.set_ylim([40, 230])
 
-    fig = plt.figure(figsize=(11.0, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
@@ -65,7 +65,7 @@ def plot_electrons_minus_positrons():
         ax.set_ylabel(r'E$^{3.3}$ I [GeV$^{2.3}$ m$^{-2}$ s$^{-1}$ sr$^{-1}$]')
         ax.set_ylim([400, 540])
 
-    fig = plt.figure(figsize=(11.0, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
@@ -95,7 +95,7 @@ def plot_electrons_minus_positrons_up():
         ax.set_ylabel(r'E$^{3.3}$ I [GeV$^{2.3}$ m$^{-2}$ s$^{-1}$ sr$^{-1}$]')
         ax.set_ylim([400, 540])
 
-    fig = plt.figure(figsize=(11.0, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
@@ -130,7 +130,7 @@ def plot_sigmas():
         ax.set_ylabel(r'$\sigma$')
         ax.set_ylim([0, 8])
     
-    fig = plt.figure(figsize=(11.0, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
@@ -151,7 +151,7 @@ def plot_sigmas():
     savefig(plt, 'AMS02-sigmas.pdf')
 
 if __name__== "__main__":
-    #plot_electrons_and_positrons()
+    plot_electrons_and_positrons()
     plot_electrons_minus_positrons()
     plot_electrons_minus_positrons_up()
     #plot_sigmas()

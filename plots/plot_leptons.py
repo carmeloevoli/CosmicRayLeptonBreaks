@@ -75,8 +75,11 @@ def plot_data_leptons():
     plot_nosys_data(ax, 'data/HESS_e-e+_energy.txt', 3.0, 1., 's', 'tab:orange', r'HESS (only stat) 2008', 1)
     plot_nosys_data(ax, 'data/HESS-LE_e-e+_energy.txt', 3.0, 1., 's', 'tab:orange', r'HESS-LE (only stat) 2009', 1)
 
+    ax.annotate("", xy=(1e3, 190.), xytext=(1e3, 210.), arrowprops=dict(arrowstyle="->", color='blue', lw=5.))
+    #ax.annotate("", xy=(50, 190.), xytext=(50, 210.), arrowprops=dict(arrowstyle="->", color='blue', lw=5.))
+
     ax.legend(fontsize=17, loc='lower left')
-    savefig(plt, 'TeVPA24-data-leptons.pdf')
+    savefig(plt, 'TeVPA24-data-leptons-HE.pdf')
 
 def plot_DAMPE_leptons():
     def set_axes(ax):

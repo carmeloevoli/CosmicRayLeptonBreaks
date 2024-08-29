@@ -24,11 +24,11 @@ def plot_timescales():
         ax.set_yscale('log')
         ax.set_ylim([0.1, 1e2])
 
-    fig = plt.figure(figsize=(10.5, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
     set_axes(ax)
 
-    filename = 'TeVPA24_timescales.txt'
+    filename = '../model/TeVPA24_timescales.txt'
     E, tau_d5, tau_d2 = np.loadtxt(filename, usecols=(0,1,2), unpack=True)
     ax.fill_between(E, tau_d2, tau_d5, color='tab:gray', alpha=0.33, zorder=1, label=r'Escape [$2 < H < 5$ kpc]')
 
@@ -48,65 +48,56 @@ def plot_timescales():
     savefig(plt, 'TeVPA24-timescales.pdf')
 
 def plot_horizon():
-    def set_axes(ax):
-        ax.set_xlabel('E [GeV]')
+    def set_axes_top(ax):
         ax.set_xscale('log')
         ax.set_xlim([1e1, 1e4])
-        ax.set_ylabel(r'electron horizon [kpc]')
-        #ax.set_yscale('log')
+        ax.set_ylabel(r'diffusion length [kpc]')
         ax.set_ylim([1, 9])
+        ax.set_xticklabels([])
 
-    fig = plt.figure(figsize=(10.5, 8.0))
-    ax = fig.add_subplot(111)
-    set_axes(ax) 
-
-    filename = 'TeVPA24_horizons.txt'
-    E, l2_1, l2_3 = np.loadtxt(filename, usecols=(0,1,2), unpack=True)
-    
-    #l2 = lambda_2(E, 1.)
-    ax.fill_between(E, np.sqrt(l2_1), 10., color='tab:blue', alpha=0.1)
-    ax.plot(E, np.sqrt(l2_1), color='tab:blue', lw=4)
-    ax.fill_between(E, np.sqrt(l2_3), 10., color='tab:blue', alpha=0.2)
-    
-    #ax.vlines(1e3, 0, 10, ls=':', color='tab:gray')
-    ax.hlines(3.3, 1e1, 1e4, ls='--', lw=2, color='tab:gray')
-    ax.hlines(8.3, 1e1, 1e4, ls='--', lw=2, color='tab:gray')
-    ax.text(0.8e2, 2.5, r'$\lambda (\text{TeV}) \simeq 3$ kpc')
-    ax.text(0.45e4, 7.7, r'GC')
-    ax.text(15., 5.2, r'$\delta \simeq 0.54$', fontsize=24)
-    ax.text(15., 4.5, r'$H \simeq 5$ kpc', fontsize=24)
-
-    #ax.text(1.5e3, 3.6, r'$B \simeq 1 \, \mu$G', fontsize=22)
-    ax.text(1.5e3, 2.0, r'$B \simeq 3 \, \mu$G', fontsize=22)
-
-    ax.legend(fontsize=19, loc='lower left')
-    savefig(plt, 'TeVPA24-horizon.pdf')
-
-def plot_nsources():
-    def set_axes(ax):
+    def set_axes_bottom(ax):
         ax.set_xlabel('E [GeV]')
         ax.set_xscale('log')
         ax.set_xlim([1e1, 1e4])
         ax.set_ylabel(r'number of sources [log$_{10}$]')
         ax.set_ylim([1, 6])
+        
+    fig, axes = plt.subplots(nrows=2, sharex=True, figsize=(11., 14.))
+    ax1, ax2 = axes
+    set_axes_top(ax1)
+    set_axes_bottom(ax2)
 
-    fig = plt.figure(figsize=(10.5, 8.0))
-    ax = fig.add_subplot(111)
-    set_axes(ax) 
+    filename = '../model/TeVPA24_horizons.txt'
+    E, l2_1, l2_3 = np.loadtxt(filename, usecols=(0,1,2), unpack=True)
+    
+    #l2 = lambda_2(E, 1.)
+    ax1.fill_between(E, np.sqrt(l2_1), 10., color='tab:blue', alpha=0.1)
+    ax1.plot(E, np.sqrt(l2_1), color='tab:blue', lw=4)
+    ax1.fill_between(E, np.sqrt(l2_3), 10., color='tab:blue', alpha=0.2)
+    
+    ax1.vlines(1e3, 1, 10, ls='--', lw=2, color='tab:gray')
+    ax1.hlines(3.3, 1e1, 1e4, ls='--', lw=2, color='tab:gray')
+    ax1.text(0.8e2, 2.5, r'$\lambda (\text{TeV}) \simeq 3$ kpc')
+    ax1.text(15., 5.2, r'$\delta \simeq 0.54$', fontsize=26)
+    ax1.text(15., 4.5, r'$H \simeq 5$ kpc', fontsize=26)
 
-    filename = 'TeVPA24_horizons.txt'
+    #ax.text(1.5e3, 3.6, r'$B \simeq 1 \, \mu$G', fontsize=22)
+    ax1.text(1.5e3, 2.0, r'$B \simeq 3 \, \mu$G', fontsize=23)
+
+    filename = '../model/TeVPA24_horizons.txt'
     E, N_1, N_3 = np.loadtxt(filename, usecols=(0,3,4), unpack=True)
 
-    ax.fill_between(E, np.log10(N_1), 10., color='tab:red', alpha=0.1)
-    ax.plot(E, np.log10(N_1), color='tab:red', lw=4)
-    ax.fill_between(E, np.log10(N_3), 10., color='tab:red', alpha=0.2)
+    ax2.fill_between(E, np.log10(N_1), 10., color='tab:red', alpha=0.1)
+    ax2.plot(E, np.log10(N_1), color='tab:red', lw=4)
+    ax2.fill_between(E, np.log10(N_3), 10., color='tab:red', alpha=0.2)
 
-    ax.vlines(1e3, 1, 10, ls='--', lw=2, color='tab:gray')
-    ax.hlines(2.7, 1e1, 1e4, ls='--', lw=2, color='tab:gray')
-    ax.text(0.6e2, 2.3, 'N(TeV) $\sim \mathcal O(10^3)$')
+    ax2.text(15., 3.5, r'$\mathcal R$ = 2 / century', fontsize=26)
 
-    ax.legend(fontsize=19, loc='lower left')
-    savefig(plt, 'TeVPA24-nsources.pdf')
+    ax2.vlines(1e3, 1, 10, ls='--', lw=2, color='tab:gray')
+    ax2.hlines(2.7, 1e1, 1e4, ls='--', lw=2, color='tab:gray')
+    ax2.text(0.6e2, 2.3, 'N(TeV) $\sim \mathcal O(10^3)$')
+
+    savefig(plt, 'TeVPA24-horizon.pdf')
 
 def plot_sourceterm():
     def set_axes(ax):
@@ -117,9 +108,9 @@ def plot_sourceterm():
         ax.set_ylabel(r'q(E)')
         #ax.set_ylim([0.1, 2])
 
-    fig = plt.figure(figsize=(10.5, 8.0))
+    fig = plt.figure(figsize=(10.5, 8.5))
     ax = fig.add_subplot(111)
-    set_axes(ax) 
+    set_axes(ax)
 
     params, errors = np.loadtxt('../model/CALET_bpl_fit.txt', usecols=(0,1), unpack=True)
 
@@ -144,7 +135,6 @@ def plot_sourceterm():
     savefig(plt, 'TeVPA24-sourceterms.pdf')
 
 if __name__== "__main__":
-    #plot_timescales()
-    #plot_horizon()
-    #plot_nsources()
-    plot_sourceterm()
+    plot_timescales()
+    plot_horizon()
+    #plot_sourceterm()
