@@ -52,7 +52,7 @@ def transform_AMS02():
         R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
         R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
         R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
-        y = I_e[0:size] - (I_p[0:size] + eSysUp_p[0:size])
+        y = (I_e[0:size] - eSysLo_e[0:size]) - (I_p[0:size] + eSysUp_p[0:size])
         eStaLo = eStaLo_e[0:size] + eStaLo_p[0:size]
         eStaUp = eStaUp_e[0:size] + eStaUp_p[0:size]
         eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
@@ -148,16 +148,16 @@ def transform_VERITAS():
 
 if __name__== "__main__":
     transform_AMS02()
-    transform_AMS02_leptons()
-    transform_AMS02_protons()
-    transform_AMS02_antiprotons()
-    transform_AMS02_H_over_electrons()
-    transform_AMS02_pf()
-    transform_CALET()
-    transform_DAMPE()
-    transform_FERMI()
-    transform_FERMI_pf()
-    transform_HESS()
-    transform_HESS_LE()
-    transform_VERITAS()
-    transform_PAMELA_pf()
+    # transform_AMS02_leptons()
+    # transform_AMS02_protons()
+    # transform_AMS02_antiprotons()
+    # transform_AMS02_H_over_electrons()
+    # transform_AMS02_pf()
+    # transform_CALET()
+    # transform_DAMPE()
+    # transform_FERMI()
+    # transform_FERMI_pf()
+    # transform_HESS()
+    # transform_HESS_LE()
+    # transform_VERITAS()
+    # transform_PAMELA_pf()
