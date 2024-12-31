@@ -41,29 +41,44 @@ def transform_AMS02():
         R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
         R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
         y = I_e[0:size] - I_p[0:size]
-        eStaLo = eStaLo_e[0:size] + eStaLo_p[0:size]
-        eStaUp = eStaUp_e[0:size] + eStaUp_p[0:size]
-        eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
-        eSysUp = eSysUp_e[0:size] + eSysUp_p[0:size]
+        eStaLo = np.sqrt(eStaLo_e[0:size]**2. + eStaLo_p[0:size]**2.)
+        eStaUp = np.sqrt(eStaUp_e[0:size]**2. + eStaUp_p[0:size]**2.)
+        eSysLo = np.sqrt(eSysLo_e[0:size]**2. + eSysLo_p[0:size]**2.)
+        eSysUp = np.sqrt(eSysUp_e[0:size]**2. + eSysUp_p[0:size]**2.)
         data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
         dump(data, 'AMS-02_e-_minus_e+_energy.txt')
-
-    def _difference_up():
+    
+    def _difference_addsys():
         R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
         R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
         R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
         y = (I_e[0:size] - eSysLo_e[0:size]) - (I_p[0:size] + eSysUp_p[0:size])
-        eStaLo = eStaLo_e[0:size] + eStaLo_p[0:size]
-        eStaUp = eStaUp_e[0:size] + eStaUp_p[0:size]
-        eSysLo = eSysLo_e[0:size] + eSysLo_p[0:size]
-        eSysUp = eSysUp_e[0:size] + eSysUp_p[0:size]
+        eStaLo = np.sqrt(eStaLo_e[0:size]**2. + eStaLo_p[0:size]**2.)
+        eStaUp = np.sqrt(eStaUp_e[0:size]**2. + eStaUp_p[0:size]**2.)
+        eSysLo = np.sqrt(eSysLo_e[0:size]**2. + eSysLo_p[0:size]**2.)
+        eSysUp = np.sqrt(eSysUp_e[0:size]**2. + eSysUp_p[0:size]**2.)
+        eStaLo = np.sqrt(eStaLo**2. + eSysLo**2.)
+        eStaUp = np.sqrt(eStaUp**2. + eSysUp**2.)
+        data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
+        dump(data, 'AMS-02_e-_minus_e+_statAdd_energy.txt')
+
+    def _difference_upsys():
+        R_min, R_max, I_e, eStaLo_e, eStaUp_e, eSysLo_e, eSysUp_e = readfile('lake/AMS-02_e-_rigidity.txt')
+        R_min, R_max, I_p, eStaLo_p, eStaUp_p, eSysLo_p, eSysUp_p = readfile('lake/AMS-02_e+_rigidity.txt')
+        R_mean = compute_mean_energy(R_min[0:size], R_max[0:size], 3.0)
+        y = (I_e[0:size] - eSysLo_e[0:size]) - (I_p[0:size] + eSysUp_p[0:size])
+        eStaLo = np.sqrt(eStaLo_e[0:size]**2. + eStaLo_p[0:size]**2.)
+        eStaUp = np.sqrt(eStaUp_e[0:size]**2. + eStaUp_p[0:size]**2.)
+        eSysLo = np.sqrt(eSysLo_e[0:size]**2. + eSysLo_p[0:size]**2.)
+        eSysUp = np.sqrt(eSysUp_e[0:size]**2. + eSysUp_p[0:size]**2.)
         data = [R_mean, y, eStaLo, eStaUp, eSysLo, eSysUp]
         dump(data, 'AMS-02_e-_minus_e+_statUp_energy.txt')
 
     _positrons()
     _electrons()
     _difference()
-    _difference_up()
+    _difference_addsys()
+    _difference_upsys()
 
 def transform_AMS02_leptons():
     E_min, E_max, I_E, eStaLo, eStaUp, eSysLo, eSysUp = readfile('lake/AMS-02_e-e+_rigidity.txt')

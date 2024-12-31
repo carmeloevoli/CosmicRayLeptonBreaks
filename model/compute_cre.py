@@ -176,8 +176,41 @@ def print_cre(filename: str):
     f.close()
     print(f'dump on {filename}')
 
+def count_sources(E: float) -> float:
+    B = 3e-6
+
+    dEdt = dEdt_sync(E, 3e-6) 
+    dEdt += dEdt_IC(E, CMB[0], CMB[1]) 
+    dEdt += dEdt_IC(E, IR[0], IR[1])
+    dEdt += dEdt_IC(E, opt[0], opt[1])
+    dEdt += dEdt_IC(E, UVI[0], UVI[1])
+    dEdt += dEdt_IC(E, UVII[0], UVII[1])
+    dEdt += dEdt_IC(E, UVIII[0], UVIII[1])
+    
+    tau_cool = E / dEdt
+    
+    print (f'tau_loss : {tau_cool:5.1f} Myr')
+
+    H = 5.
+
+    D_0 = D_0_over_H * H
+    D = D_0 * np.power(E / E_0, D_delta)
+
+    print (f'D : {D:5.1f} kpc2/Myr')
+
+    l_d = np.sqrt(4. * D * tau_cool)
+
+    print (f'l_d : {l_d:5.1f} kpc')
+
+    N = (l_d / R_Galaxy)**2.0 * tau_cool * rate_sources
+
+    print (f'N : {N:5.1e}')
+
 if __name__== "__main__":
-    print_timescale('TeVPA24_timescales.txt')
-    print_horizon('TeVPA24_horizons.txt')
-    print_sourceterms('TeVPA24_sources.txt')
-    print_cre('TeVPA24_cre.txt')
+#    print_timescale('TeVPA24_timescales.txt')
+#    print_horizon('TeVPA24_horizons.txt')
+#    print_sourceterms('TeVPA24_sources.txt')
+#    print_cre('TeVPA24_cre.txt')
+    
+    count_sources(40.)
+

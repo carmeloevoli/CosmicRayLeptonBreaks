@@ -1,8 +1,9 @@
 from iminuit import Minuit
 from utils import load_data, SPL, BPL, chi2_single, compute_p_value, compute_sigmas
 
-FILENAME = 'data/AMS-02_e-_minus_e+_statUp_energy.txt'
 #FILENAME = 'data/AMS-02_e-_minus_e+_energy.txt'
+#FILENAME = 'data/AMS-02_e-_minus_e+_statUp_energy.txt'
+FILENAME = 'data/AMS-02_e-_minus_e+_statAdd_energy.txt'
 
 # Function to fit data using a Single Power Law (SPL) model
 def fit_spl(initial_params):
@@ -81,20 +82,21 @@ if __name__ == "__main__":
     spl_values, spl_errors, spl_chi2, spl_dof = fit_spl(spl_initial)
     # Print results
     print('Single Power Law:')
-    print(f'Params : I0={spl_values[0]:5.2f}, alpha={spl_values[1]:5.3f}')
-    print(f'Errors : {spl_errors[0]:5.2f}, {spl_errors[1]:5.3f}')
-    print(f'Chi2 / dof : {spl_chi2:5.0f} / {spl_dof}')
-    print(f'p-value : {compute_p_value(spl_chi2, spl_dof):5.2f}')
+    print(f'I0: {spl_values[0]:5.2f} {spl_errors[0]:5.2f}')
+    print(f'alpha: {spl_values[1]:5.3f} {spl_errors[1]:5.3f}')
+    print(f'Chi2/dof: {spl_chi2:4.0f} / {spl_dof}')
+    print(f'p-value : {compute_p_value(spl_chi2, spl_dof):5.2e}')
     print('')
     # Initial parameters for BPL
     bpl_initial = [22.02, 3.321, 45, 0.1, 0.01]
     bpl_values, bpl_errors, bpl_chi2, bpl_dof = fit_bpl(bpl_initial)
     # Print results
     print('Broken Power Law:')
-    print(f'Params : I0={bpl_values[0]:5.2f}, alpha={bpl_values[1]:5.3f}, Eb={bpl_values[2]:5.1f}, '
-          f'dalpha={bpl_values[3]:5.2f}, s={bpl_values[4]:5.3f}')
-    print(f'Errors : {bpl_errors[0]:5.2f}, {bpl_errors[1]:5.3f}, {bpl_errors[2]:5.1f}, '
-          f'{bpl_errors[3]:5.2f}, {bpl_errors[4]:5.3f}')
+    print(f'I0: {bpl_values[0]:5.2f} {bpl_errors[0]:5.2f}')
+    print(f'alpha: {bpl_values[1]:5.3f} {bpl_errors[1]:5.3f}')
+    print(f'Eb: {bpl_values[2]:5.1f} {bpl_errors[2]:5.1f} ')
+    print(f'dalpha: {bpl_values[3]:5.2f} {bpl_errors[3]:5.2f} ')
+    print(f's: {bpl_values[4]:5.3f} {bpl_errors[4]:5.3f} ')
     print(f'Chi2 / dof : {bpl_chi2:5.2f} / {bpl_dof}')
     print(f'p-value : {compute_p_value(bpl_chi2, bpl_dof):5.2f}')
     print('')

@@ -40,10 +40,12 @@ def fit_background(params: tuple) -> tuple:
 
     return m.values, m.errors, m.fval, dof
 
+ADDSTATU = False
+
 def fit_spl(params: tuple) -> tuple:
     # Load positron and electron data
-    pos_energy, pos_flux, pos_err_lo, pos_err_up = load_data('data/AMS-02_e+_energy.txt', add_stat_u=False)
-    ele_energy, ele_flux, ele_err_lo, ele_err_up = load_data('data/AMS-02_e-_energy.txt', add_stat_u=False)
+    pos_energy, pos_flux, pos_err_lo, pos_err_up = load_data('data/AMS-02_e+_energy.txt', add_stat_u=ADDSTATU)
+    ele_energy, ele_flux, ele_err_lo, ele_err_up = load_data('data/AMS-02_e-_energy.txt', add_stat_u=ADDSTATU)
 
     # Define chi-squared function
     def chi2_function(C1, alpha1, Eb1, C2, alpha2, Ec, I0, alpha):
@@ -90,8 +92,8 @@ def fit_spl(params: tuple) -> tuple:
 
 def fit_bpl(params: tuple) -> tuple:
     # Load positron and electron data
-    pos_energy, pos_flux, pos_err_lo, pos_err_up = load_data('data/AMS-02_e+_energy.txt', add_stat_u=True)
-    ele_energy, ele_flux, ele_err_lo, ele_err_up = load_data('data/AMS-02_e-_energy.txt', add_stat_u=True)
+    pos_energy, pos_flux, pos_err_lo, pos_err_up = load_data('data/AMS-02_e+_energy.txt', add_stat_u=ADDSTATU)
+    ele_energy, ele_flux, ele_err_lo, ele_err_up = load_data('data/AMS-02_e-_energy.txt', add_stat_u=ADDSTATU)
 
     # Define chi-squared function
     def chi2_function(C1, alpha1, Eb1, C2, alpha2, Ec, I0, alpha, Eb, dalpha, s):
@@ -144,24 +146,49 @@ if __name__== "__main__":
     print(f"C1: {bkg_values[0]:4.1f} {bkg_errors[0]:4.1f}")
     print(f"alpha1: {bkg_values[1]:4.1f} {bkg_errors[1]:4.1f}")
     print(f"Eb1: {bkg_values[2]:4.1f} {bkg_errors[2]:4.1f}")
-    print(f"C2: {bkg_values[3]:4.2f} {bkg_errors[3]:4.2f}")
-    print(f"alpha2: {bkg_values[4]:4.1f} {bkg_errors[4]:4.1f}")
+    print(f"C2: {bkg_values[3]:4.3f} {bkg_errors[3]:4.3f}")
+    print(f"alpha2: {bkg_values[4]:4.2f} {bkg_errors[4]:4.2f}")
     print(f"Ec: {bkg_values[5]:4.0f} {bkg_errors[5]:4.0f}")
     print(f'Chi2/dof: {bkg_chi2:5.0f} / {bkg_dof}')
     print(f"p-value: {compute_p_value(bkg_chi2, bkg_dof):.3f}")
+    print(f"[{bkg_values[0]:5.3e}, {bkg_values[1]:5.3e}, {bkg_values[2]:5.3e}, {bkg_values[3]:5.3e}, {bkg_values[4]:5.3e}, {bkg_values[5]:5.3e}]")
     print('')
     # Initial parameters for SPL
     spl_initial = [0.58, 3.89, 53.8, 0.085, 2.50, 0.64e3, 21.81, 3.281]
     spl_values, spl_errors, spl_chi2, spl_dof = fit_spl(spl_initial)
     print('SPL + Background Model Fit Results:')
+    print(f"C1: {spl_values[0]:4.1f} {spl_errors[0]:4.1f}")
+    print(f"alpha1: {spl_values[1]:4.1f} {spl_errors[1]:4.1f}")
+    print(f"Eb1: {spl_values[2]:4.1f} {spl_errors[2]:4.1f}")
+    print(f"C2: {spl_values[3]:4.3f} {spl_errors[3]:4.3f}")
+    print(f"alpha2: {spl_values[4]:4.2f} {spl_errors[4]:4.2f}")
+    print(f"Ec: {spl_values[5]:4.0f} {spl_errors[5]:4.0f}")
     print(f'I0: {spl_values[6]:5.2f} {spl_errors[6]:5.2f}')
     print(f'alpha: {spl_values[7]:5.2f} {spl_errors[7]:5.2f}')
     print(f'Chi2 / dof : {spl_chi2:5.0f} / {spl_dof}')
+    print(f"p-value: {compute_p_value(spl_chi2, spl_dof):.3e}")
+    print(f"[{spl_values[0]:5.3e}, {spl_values[1]:5.3e}, {spl_values[2]:5.3e}, {spl_values[3]:5.3e}, {spl_values[4]:5.3e}, {spl_values[5]:5.3e}]")
+    print(f"[{spl_values[6]:5.3e}, {spl_values[7]:5.3e}]")
     print('')
     bpl_initial = [0.58, 3.89, 53.8, 0.085, 2.50, 0.64e3, 22.02, 3.321, 45, 0.1, 0.01]
     bpl_values, bpl_errors, bpl_chi2, bpl_dof = fit_bpl(bpl_initial)
     print('BPL + Background Model Fit Results:')
+    print(f"C1: {bpl_values[0]:4.1f} {bpl_errors[0]:4.1f}")
+    print(f"alpha1: {bpl_values[1]:4.1f} {bpl_errors[1]:4.1f}")
+    print(f"Eb1: {bpl_values[2]:4.1f} {bpl_errors[2]:4.1f}")
+    print(f"C2: {bpl_values[3]:4.3f} {bpl_errors[3]:4.3f}")
+    print(f"alpha2: {bpl_values[4]:4.2f} {bpl_errors[4]:4.2f}")
+    print(f"Ec: {bpl_values[5]:4.0f} {bpl_errors[5]:4.0f}")
+    print(f'I0: {bpl_values[6]:5.2f} {bpl_errors[6]:5.2f}')
+    print(f'alpha: {bpl_values[7]:5.2f} {bpl_errors[7]:5.2f}')
+    print(f'Eb: {bpl_values[8]:5.2f} {bpl_errors[8]:5.2f}')
+    print(f'dalpha: {bpl_values[9]:5.2f} {bpl_errors[9]:5.2f}')
+    print(f's: {bpl_values[10]:5.2f} {bpl_errors[10]:5.2f}')
     print(f'Chi2 / dof : {bpl_chi2:5.0f} / {bpl_dof}')
+    print(f"p-value: {compute_p_value(bpl_chi2, bpl_dof):.3f}")
+    print(f"[{bpl_values[0]:5.3e}, {bpl_values[1]:5.3e}, {bpl_values[2]:5.3e}, {bpl_values[3]:5.3e}, {bpl_values[4]:5.3e}, {bpl_values[5]:5.3e}]")
+    print(f"[{bpl_values[6]:5.3e}, {bpl_values[7]:5.3e},  {bpl_values[8]:5.3e},  {bpl_values[9]:5.3e},  {bpl_values[10]:5.3e}]")
+    print('')
     chi_squared = spl_chi2 - bpl_chi2
     dof = spl_dof - bpl_dof
     print(f'{compute_sigmas(chi_squared, dof):5.1f}')
