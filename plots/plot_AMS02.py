@@ -36,7 +36,7 @@ def plot_electrons_and_positrons():
     plot_data(ax, 'data/AMS-02_e-_energy.txt', 3.0, 1., 'o', 'tab:gray', r'e$^-$', 3)
     #ax.text(35., 170., 'electrons', color='tab:gray', fontsize=21)
 
-    plot_data(ax, 'data/AMS-02_e-_minus_e+_energy.txt', 3.0, 1., 'o', 'tab:red', r'e$^-$ - e$^+$', 5)
+    plot_data(ax, 'data/AMS-02_e-_minus_e+_energy.txt', 3.0, 1., 'o', 'tab:red', r'$e^- - e^+$', 5)
     #ax.text(35., 170., 'electrons', color='tab:red', fontsize=21)
 
     plot_data(ax, 'data/AMS-02_e+_energy.txt', 3.0, 10., 'o', 'tab:blue', r'e$^+$ [10x]', 6)
@@ -73,8 +73,8 @@ def plot_electrons_minus_positrons():
     I0, alpha, Eb, dalpha, s = 22.02, 3.321, 37.2, 0.08, 0.007
     ax.plot(E, E3 * BPL(E, [I0, alpha, Eb, dalpha, s]), zorder=9, color='r', label='$\chi^2$/dof = 25 / 32')
 
-    plot_data(ax, 'data/AMS-02_e-_minus_e+_energy.txt', 3.3, 1., 'o', 'tab:blue', r'e$^-$ - e$^+$', zorder=3)
-    ax.text(30., 445., r'$e^-$ - $e^+$', color='tab:blue', fontsize=23)
+    plot_data(ax, 'data/AMS-02_e-_minus_e+_energy.txt', 3.3, 1., 'o', 'tab:blue', r'$e^- - e^+$', zorder=3)
+    ax.text(30., 445., r'$e^- - e^+$', color='tab:blue', fontsize=23)
 
     ax.legend(fontsize=22, loc='best')
     savefig(plt, 'AMS02-electrons-minus-positrons.pdf')
@@ -140,7 +140,7 @@ def plot_electrons_background():
     savefig(plt, 'AMS02-electrons-background-fit.pdf')
 
 if __name__== "__main__":
-    #plot_electrons_and_positrons()
-    #plot_electrons_minus_positrons()
+    plot_electrons_and_positrons()
+    plot_electrons_minus_positrons()
     #plot_positrons_background()
-    plot_electrons_background()
+    #plot_electrons_background()
